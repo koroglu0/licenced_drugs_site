@@ -3,7 +3,9 @@ const loginService = require("./services/login");
 const verifyService = require("./services/verify");
 const util = require("./utils/util");
 const drugsService = require("./services/drugs");
+const filterService = require("./services/filter");
 
+const filterPath = "/filter";
 const registerPath = "/register";
 const loginPath = "/login";
 const verifyPath = "/verify";
@@ -41,6 +43,12 @@ exports.handler = async (event) => {
         response = await drugsService.getDrug(drugsId);
       }
       return response;
+
+    // case event.httpMethod === "GET" && event.path === filterPath:
+    //   const filterBody = JSON.parse(event.body); // Filtreleme kriterlerini parse et
+    //   response = await filterService.filterDrugs(filterBody); // Filtreleme işlemini çağır
+    //   response = util.buildResponse(200, response); // Başarılı yanıt dön
+    //   break;
 
     default:
       response = util.buildResponse(404, "404 Not Found");

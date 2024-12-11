@@ -74,7 +74,23 @@ const scanTable = async (tableName) => {
     );
 };
 
+const updateItem = async (params) => {
+  return await dynamodb
+    .update(params)
+    .promise()
+    .then(
+      (response) => {
+        return response.Attributes;
+      },
+      (error) => {
+        console.error("There is an error updating item:", error);
+        throw new Error(error);
+      }
+    );
+};
+
 module.exports.scanTable = scanTable;
 module.exports.saveItem = saveItem;
 module.exports.getItem = getItem;
 module.exports.buildResponse = buildResponse;
+module.exports.updateItem = updateItem;
