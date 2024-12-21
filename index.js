@@ -3,9 +3,11 @@ const loginService = require("./services/login");
 const verifyService = require("./services/verify");
 const util = require("./utils/util");
 const drugsService = require("./services/drugs");
-const filterService = require("./services/filter");
+const radiopharmaService = require("./services/radiopharma");
+const allergensService = require("./services/allergens");
 
-const filterPath = "/filter";
+const allergensPath = "/allergens";
+const pharmaPath = "/radiopharmaceutical";
 const registerPath = "/register";
 const loginPath = "/login";
 const verifyPath = "/verify";
@@ -44,11 +46,35 @@ exports.handler = async (event) => {
       }
       return response;
 
-    // case event.httpMethod === "GET" && event.path === filterPath:
-    //   const filterBody = JSON.parse(event.body); // Filtreleme kriterlerini parse et
-    //   response = await filterService.filterDrugs(filterBody); // Filtreleme işlemini çağır
-    //   response = util.buildResponse(200, response); // Başarılı yanıt dön
-    //   break;
+    case event.httpMethod === "GET" && event.path === pharmaPath:
+      let radiopharmaId =
+        event.queryStringParameters &&
+        event.queryStringParameters.radiopharmaId;
+      radiopharmaId =
+        radiopharmaId === "all" ? radiopharmaId : Number(radiopharmaId);
+      console.log("radiopharmaId : ", radiopharmaId);
+      if (radiopharmaId === "all") {
+        response = await util.scanTable("registered_radiopharmaceutical");
+        response = util.buildResponse(200, response);
+      } else {
+        response = await radiopharmaService.getPharma(radiopharmaId);
+      }
+      return response;
+
+    case event.httpMethod === "GET" && event.path === allergensPath:
+      let allergensId =
+        event.queryStringParameters &&
+        event.queryStringParameters.allergensId;
+        allergensId =
+        allergensId === "all" ? allergensId : Number(allergensId);
+      console.log("allergensId : ", allergensId);
+      if (allergensId === "all") {
+        response = await util.scanTable("registered_radiopharmaceutical");
+        response = util.buildResponse(200, response);
+      } else {
+        response = await allergensService.getAllergen(allergensId);
+      }
+      return response;
 
     default:
       response = util.buildResponse(404, "404 Not Found");

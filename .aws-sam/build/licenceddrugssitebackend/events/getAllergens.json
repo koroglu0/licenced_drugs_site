@@ -1,10 +1,10 @@
 {
-    "body": "{\"name\": \"VIRMOL\"}",
-    "resource": "/filter",
-    "path": "/filter",
+    "body": "{}",
+    "resource": "/allergens",
+    "path": "/allergens",
     "httpMethod": "GET",
     "isBase64Encoded": false,
-    "queryStringParameters": {},
+    "queryStringParameters": { "allergensId": "all" },
     "pathParameters": {},
     "stageVariables": {},
     "headers": {
@@ -12,15 +12,15 @@
     },
     "requestContext": {
       "accountId": "123456789012",
-      "resourceId": "lygz4b",
+      "resourceId": "jucv89",
       "stage": "prod",
       "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
       "identity": {
         "sourceIp": "127.0.0.1",
         "userAgent": "Custom User Agent String"
       },
-      "path": "/filter",
-      "resourcePath": "/filter",
+      "path": "/allergens",
+      "resourcePath": "/allergens",
       "httpMethod": "GET",
       "apiId": "nzbjdivwzf"
     }
