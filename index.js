@@ -35,16 +35,20 @@ exports.handler = async (event) => {
       break;
     case event.httpMethod === "GET" && event.path === drugsPath:
       let drugsId =
-        event.queryStringParameters && event.queryStringParameters.drugsId;
-      drugsId = drugsId === "all" ? drugsId : Number(drugsId);
-      console.log("drugsId : ", drugsId);
-      if (drugsId === "all") {
-        response = await util.scanTable("drugs_table");
-        response = util.buildResponse(200, response);
-      } else {
-        response = await drugsService.getDrug(drugsId);
-      }
-      return response;
+          event.queryStringParameters && event.queryStringParameters.drugsId;
+        if (drugsId === "all") {
+          const limit =
+            (event.queryStringParameters &&
+              parseInt(event.queryStringParameters.limit)) ||
+            1000;
+          const lastEvaluatedKey =
+            event.queryStringParameters &&
+            JSON.parse(event.queryStringParameters.lastEvaluatedKey || null);
+          response = await drugsService.getAllDrugs(limit, lastEvaluatedKey);
+        } else {
+          response = await drugsService.getDrug(drugsId);
+        }
+        return response;
 
     case event.httpMethod === "GET" && event.path === pharmaPath:
       let radiopharmaId =

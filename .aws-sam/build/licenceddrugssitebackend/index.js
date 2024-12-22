@@ -21,30 +21,51 @@ exports.handler = async (event) => {
     case event.httpMethod === "GET" && event.path === healthpath:
       response = await util.buildResponse(200, "Başarılı!");
       break;
+
     case event.httpMethod === "POST" && event.path === registerPath:
       const registerBody = JSON.parse(event.body);
       response = await registerService.register(registerBody);
       break;
+
     case event.httpMethod === "POST" && event.path === loginPath:
       const loginBody = JSON.parse(event.body);
       response = await loginService.login(loginBody);
       break;
+
     case event.httpMethod === "POST" && event.path === verifyPath:
       const verifyBody = JSON.parse(event.body);
       response = verifyService.verify(verifyBody);
       break;
+
     case event.httpMethod === "GET" && event.path === drugsPath:
       let drugsId =
         event.queryStringParameters && event.queryStringParameters.drugsId;
-      drugsId = drugsId === "all" ? drugsId : Number(drugsId);
-      console.log("drugsId : ", drugsId);
       if (drugsId === "all") {
-        response = await util.scanTable("drugs_table");
-        response = util.buildResponse(200, response);
+        const limit =
+          (event.queryStringParameters &&
+            parseInt(event.queryStringParameters.limit)) ||
+          1000;
+        const lastEvaluatedKey =
+          event.queryStringParameters &&
+          JSON.parse(event.queryStringParameters.lastEvaluatedKey || null);
+        response = await drugsService.getAllDrugs(limit, lastEvaluatedKey);
       } else {
         response = await drugsService.getDrug(drugsId);
       }
       return response;
+
+    // case event.httpMethod === "GET" && event.path === drugsPath:
+    //   let drugsId =
+    //     event.queryStringParameters && event.queryStringParameters.drugsId;
+    //   drugsId = drugsId === "all" ? drugsId : Number(drugsId);
+    //   console.log("drugsId : ", drugsId);
+    //   if (drugsId === "all") {
+    //     response = await util.scanTable("drugs_table");
+    //     response = util.buildResponse(200, response);
+    //   } else {
+    //     response = await drugsService.getDrug(drugsId);
+    //   }
+    //   return response;
 
     case event.httpMethod === "GET" && event.path === pharmaPath:
       let radiopharmaId =
@@ -63,10 +84,8 @@ exports.handler = async (event) => {
 
     case event.httpMethod === "GET" && event.path === allergensPath:
       let allergensId =
-        event.queryStringParameters &&
-        event.queryStringParameters.allergensId;
-        allergensId =
-        allergensId === "all" ? allergensId : Number(allergensId);
+        event.queryStringParameters && event.queryStringParameters.allergensId;
+      allergensId = allergensId === "all" ? allergensId : Number(allergensId);
       console.log("allergensId : ", allergensId);
       if (allergensId === "all") {
         response = await util.scanTable("registered_radiopharmaceutical");

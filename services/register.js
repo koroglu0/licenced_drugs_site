@@ -35,11 +35,13 @@ async function register(userInfo) {
   };
 
   const savedUserResponse = await util.saveItem(userTable, user);
-  if (!savedUserResponse) {
-    return util.buildResponse(503, {
-      message: "Server Error. Please try again later.",
-    });
-  }
+if (savedUserResponse !== true) {
+  return util.buildResponse(503, {
+    message: "Server Error. Please try again later.",
+    error: savedUserResponse // Hata bilgisini ekleyin
+  });
+}
+
   return util.buildResponse(200, { username: username });
 }
 

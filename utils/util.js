@@ -89,36 +89,8 @@ const updateItem = async (params) => {
     );
 };
 
-async function paginatedScan(params, limit = Infinity) {
-  const items = [];
-  let count = 0;
-  let lastEvaluatedKey = null;
-
-  do {
-    if (lastEvaluatedKey) {
-      params.ExclusiveStartKey = lastEvaluatedKey;
-    }
-
-    const result = await dynamodb.scan(params).promise();
-    items.push(...result.Items);
-    count += result.Count;
-    lastEvaluatedKey = result.LastEvaluatedKey;
-
-    if (count >= limit) {
-      break;
-    }
-
-  } while (lastEvaluatedKey);
-
-  return {
-    Items: items,
-    Count: count
-  };
-}
-
 module.exports.scanTable = scanTable;
 module.exports.saveItem = saveItem;
 module.exports.getItem = getItem;
 module.exports.buildResponse = buildResponse;
 module.exports.updateItem = updateItem;
-module.exports.paginatedScan = paginatedScan;
